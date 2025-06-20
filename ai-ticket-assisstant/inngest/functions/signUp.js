@@ -6,7 +6,7 @@ import { sendMail } from "../../libs/mailer";
 export const onUserSignup = inngest.createFunction(
   {
     id: "on-user-signup",
-    retries: 7,
+    retries: 2,
   },
   { event: "user/signup" },
   async ({ event, step }) => {
