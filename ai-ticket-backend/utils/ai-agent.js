@@ -1,4 +1,6 @@
 import { createAgent, gemini } from "@inngest/agent-kit";
+import dotenv from "dotenv";
+dotenv.config();
 
 const analyzeTicket = async (ticket) => {
   const supportAgent = createAgent({
@@ -49,11 +51,20 @@ Ticket information:
 - Title: ${ticket.title}
 - Description: ${ticket.description}`);
 
-  const raw = response.output[0].context;
+  const raw = response.output[0].content;
+
+  if (!raw) {
+    console.error("❌ No AI response returned. Full output:", response);
+    return null;
+  }
 
   try {
     const match = raw.match(/```json\s*([\s\S]*?)\s*```/i);
+    if (!match) throw new Error("No JSON object found");
+
     const jsonString = match ? match[1] : raw.trim();
+    console.log(jsonString);
+
     return JSON.parse(jsonString);
   } catch (e) {
     console.log("Failed to parse JSON from AI response" + e.message);

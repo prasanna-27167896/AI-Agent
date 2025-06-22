@@ -1,7 +1,7 @@
-import { inngest } from "../client";
+import { inngest } from "../client.js";
 import User from "../../models/user.js";
 import { NonRetriableError } from "inngest";
-import { sendMail } from "../../libs/mailer";
+import { sendMail } from "../../utils/mailer.js";
 
 export const onUserSignup = inngest.createFunction(
   {
@@ -25,7 +25,8 @@ export const onUserSignup = inngest.createFunction(
 
       await step.run("send-welcome-email", async () => {
         const subject = `Welcome to the app`;
-        const message = `Hi,
+        const message = `
+        Hi,
         \n\n
         Thanks for signing up. We're glad to have you onboard!
         \n\n

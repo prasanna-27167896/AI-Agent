@@ -7,7 +7,7 @@ export const signup = async (req, res) => {
   const { email, password, skills = [] } = req.body;
 
   try {
-    const hashedPassword = bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ email, password: hashedPassword, skills });
 
     //Fire inngest event
@@ -17,6 +17,8 @@ export const signup = async (req, res) => {
         email,
       },
     });
+
+    console.log("✅ Event sent to Inngest:", email);
 
     const token = jwt.sign(
       {
@@ -28,6 +30,7 @@ export const signup = async (req, res) => {
 
     res.json({ user, token });
   } catch (error) {
+    console.error("Signup error:", error);
     res.status(500).json({ error: "signup failed", details: error.message });
   }
 };
@@ -36,13 +39,13 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = User.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(401).json({ error: "User not found" });
     }
 
-    const isPassMatched = bcrypt.compare(password, user.password);
+    const isPassMatched = await bcrypt.compare(password, user.password);
 
     if (!isPassMatched) {
       return res.status(401).json({ error: "Invalid Credentials" });

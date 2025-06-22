@@ -1,8 +1,9 @@
-import { inngest } from "../client";
+import { inngest } from "../client.js";
 import Ticket from "../../models/ticket.js";
 import { NonRetriableError } from "inngest";
 import User from "../../models/user.js";
 import analyzeTicket from "../../utils/ai-agent.js";
+import { sendMail } from "../../utils/mailer.js";
 
 export const onTicketCreated = inngest.createFunction(
   {
@@ -51,11 +52,14 @@ export const onTicketCreated = inngest.createFunction(
       const moderator = await step.run("assign-moderator", async () => {
         let user = await User.findOne({
           role: "moderator",
+          // skills: {
+          //   $eleMatch: {
+          //     $regex: relatedSkills.join("|"),
+          //     $options: "i",
+          //   },
+          // },
           skills: {
-            $eleMatch: {
-              $regex: relatedSkills.join("|"),
-              $options: "i",
-            },
+            $in: relatedSkills.map((skill) => new RegExp(skill, "i")),
           },
         });
         if (!user) {
