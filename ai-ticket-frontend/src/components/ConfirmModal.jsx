@@ -4,19 +4,24 @@ export default function ConfirmModal({ isOpen, onClose, onConfirm }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 shadow-md w-80">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">
-          Confirm Delete
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 shadow-xl w-[90%] max-w-sm text-white relative">
+        {/* Title */}
+        <h3 className="text-lg font-semibold text-blue-400 mb-3">
+          Confirm Deletion
         </h3>
-        <p className="text-sm text-gray-600 mb-6">
+
+        {/* Message */}
+        <p className="text-sm text-gray-300 mb-6">
           Are you sure you want to delete this ticket? This action cannot be
           undone.
         </p>
+
+        {/* Action Buttons */}
         <div className="flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-3 py-1 text-sm rounded bg-gray-300 text-gray-800 hover:bg-gray-400"
+            className="px-4 py-2 rounded bg-gray-700 hover:bg-gray-600 transition"
           >
             Cancel
           </button>
@@ -25,7 +30,7 @@ export default function ConfirmModal({ isOpen, onClose, onConfirm }) {
               onConfirm();
               onClose();
             }}
-            className="px-3 py-1 text-sm rounded bg-red-600 text-white hover:bg-red-700"
+            className="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white transition"
           >
             Delete
           </button>

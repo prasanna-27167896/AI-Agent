@@ -21,8 +21,6 @@ export default function AdminPanel() {
         },
       });
       const data = await res.json();
-      console.log(data);
-
       if (res.ok) {
         setUsers(data);
         setFilteredUsers(data);
@@ -86,37 +84,45 @@ export default function AdminPanel() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-6">Admin Panel - Manage Users</h1>
+    <div className="max-w-5xl mx-auto mt-10 px-4 text-white">
+      <h1 className="text-3xl font-bold text-blue-400 mb-6">
+        Admin Panel – Manage Users
+      </h1>
+
       <input
         type="text"
-        className="input input-bordered w-full mb-6"
-        placeholder="Search by email"
+        className="input input-bordered w-full bg-gray-900 text-white placeholder-gray-400 border-gray-600 mb-6"
+        placeholder="🔍 Search by email"
         value={searchQuery}
         onChange={handleSearch}
       />
+
       {filteredUsers.map((user) => (
         <div
           key={user._id}
-          className="bg-base-100 shadow rounded p-4 mb-4 border"
+          className="bg-[#1e293b] border border-gray-700 shadow-md rounded-xl p-5 mb-4 transition hover:shadow-lg"
         >
-          <p>
-            <strong>Email:</strong> {user.email}
-          </p>
-          <p>
-            <strong>Current Role:</strong> {user.role}
-          </p>
-          <p>
-            <strong>Skills:</strong>{" "}
-            {user.skills && user.skills.length > 0
-              ? user.skills.join(", ")
-              : "N/A"}
-          </p>
+          <div className="space-y-1">
+            <p>
+              <span className="font-semibold text-gray-300">📧 Email:</span>{" "}
+              {user.email}
+            </p>
+            <p>
+              <span className="font-semibold text-gray-300">🛡 Role:</span>{" "}
+              {user.role}
+            </p>
+            <p>
+              <span className="font-semibold text-gray-300">🛠 Skills:</span>{" "}
+              {user.skills && user.skills.length > 0
+                ? user.skills.join(", ")
+                : "N/A"}
+            </p>
+          </div>
 
           {editingUser === user.email ? (
-            <div className="mt-4 space-y-2">
+            <div className="mt-4 space-y-3">
               <select
-                className="select select-bordered w-full"
+                className="select select-bordered w-full bg-gray-800 text-white border-gray-600"
                 value={formData.role}
                 onChange={(e) =>
                   setFormData({ ...formData, role: e.target.value })
@@ -130,38 +136,44 @@ export default function AdminPanel() {
               <input
                 type="text"
                 placeholder="Comma-separated skills"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full bg-gray-800 text-white border-gray-600 placeholder-gray-400"
                 value={formData.skills}
                 onChange={(e) =>
                   setFormData({ ...formData, skills: e.target.value })
                 }
               />
 
-              <div className="flex gap-2">
+              <div className="flex justify-end gap-2 mt-2">
                 <button
-                  className="btn btn-success btn-sm"
+                  className="btn btn-sm bg-green-600 hover:bg-green-500 text-white"
                   onClick={handleUpdate}
                 >
-                  Save
+                  ✅ Save
                 </button>
                 <button
-                  className="btn btn-ghost btn-sm"
+                  className="btn btn-sm bg-gray-700 hover:bg-gray-600 text-white"
                   onClick={() => setEditingUser(null)}
                 >
-                  Cancel
+                  ❌ Cancel
                 </button>
               </div>
             </div>
           ) : (
-            <button
-              className="btn btn-primary btn-sm mt-2"
-              onClick={() => handleEditClick(user)}
-            >
-              Edit
-            </button>
+            <div className="flex justify-end mt-4">
+              <button
+                className="btn btn-sm bg-blue-600 hover:bg-blue-500 text-white"
+                onClick={() => handleEditClick(user)}
+              >
+                ✏️ Edit
+              </button>
+            </div>
           )}
         </div>
       ))}
+
+      {filteredUsers.length === 0 && (
+        <p className="text-gray-400 mt-6">No users found.</p>
+      )}
     </div>
   );
 }

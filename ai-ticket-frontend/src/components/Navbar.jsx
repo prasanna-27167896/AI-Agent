@@ -6,6 +6,7 @@ export default function Navbar() {
   if (user) {
     user = JSON.parse(user);
   }
+
   const navigate = useNavigate();
 
   const logout = () => {
@@ -13,32 +14,60 @@ export default function Navbar() {
     localStorage.removeItem("user");
     navigate("/login");
   };
+
   return (
-    <div className="navbar bg-base-200">
+    <div className="navbar bg-[#0f172a] text-white shadow-md px-6 py-3 relative">
+      {/* Left: Logo */}
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost text-xl">
-          Ticket AI
+        <Link
+          to="/"
+          className="text-2xl font-extrabold text-blue-400 hover:text-blue-300 transition"
+        >
+          Tickzy<span className="text-gray-400">.AI</span>
         </Link>
       </div>
-      <div className="flex gap-2">
+
+      {/* Center: Username */}
+      {user?.username && (
+        <div className="absolute left-1/2 -translate-x-1/2 hidden sm:block">
+          <span className="text-md font-medium text-gray-300">
+            Hi, {user.username}
+          </span>
+        </div>
+      )}
+
+      {/* Right: Buttons */}
+      <div className="flex items-center gap-3 text-sm">
         {!token ? (
           <>
-            <Link to="/signup" className="btn btn-sm">
+            <Link
+              to="/signup"
+              className="btn btn-sm bg-gray-700 hover:bg-gray-600 text-white border-none"
+            >
               Signup
             </Link>
-            <Link to="/login" className="btn btn-sm">
+            <Link
+              to="/login"
+              className="btn btn-sm bg-blue-600 hover:bg-blue-500 text-white border-none"
+            >
               Login
             </Link>
           </>
         ) : (
           <>
-            <p>Hi, {user?.email}</p>
-            {user && user?.role === "admin" ? (
-              <Link to="/admin" className="btn btn-sm">
+            <span className="hidden sm:block text-gray-400">{user?.email}</span>
+            {user?.role === "admin" && (
+              <Link
+                to="/admin"
+                className="btn btn-sm bg-indigo-600 hover:bg-indigo-500 text-white border-none"
+              >
                 Admin
               </Link>
-            ) : null}
-            <button onClick={logout} className="btn btn-sm">
+            )}
+            <button
+              onClick={logout}
+              className="btn btn-sm bg-red-600 hover:bg-red-500 text-white border-none"
+            >
               Logout
             </button>
           </>

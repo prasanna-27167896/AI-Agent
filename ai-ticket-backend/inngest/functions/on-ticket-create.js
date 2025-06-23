@@ -76,7 +76,9 @@ export const onTicketCreated = inngest.createFunction(
           await sendMail(
             moderator.email,
             "Ticket Assigned",
-            `A new ticket is assigned to you ${finalTicket.title}`
+            `A new ticket is assigned to you 
+            \n
+            Title of the Ticket: ${finalTicket.title}`
           );
         }
       });

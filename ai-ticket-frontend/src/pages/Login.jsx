@@ -40,40 +40,46 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200 -mt-20">
-      <div className="card w-full max-w-sm shadow-xl bg-base-100">
-        <form onSubmit={handleLogin} className="card-body">
-          <h2 className="card-title justify-center">Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-[#0f172a] px-4 -mt-16">
+      <div className="w-full max-w-sm bg-[#1e293b] text-white shadow-xl rounded-xl p-6 border border-gray-700">
+        <form onSubmit={handleLogin} className="space-y-4">
+          <h2 className="text-2xl font-bold text-center text-blue-400">
+            🔐 Login
+          </h2>
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="input input-bordered"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            className="input input-bordered"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-
-          <div className="form-control mt-4">
-            <button
-              type="submit"
-              className="btn btn-primary w-full"
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : "Login"}
-            </button>
+          <div>
+            <label className="text-sm text-gray-300">Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              className="input input-bordered w-full bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
           </div>
+
+          <div>
+            <label className="text-sm text-gray-300">Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="••••••••"
+              className="input input-bordered w-full bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary w-full bg-blue-600 border-none hover:bg-blue-500 text-white font-semibold"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
         </form>
       </div>
     </div>

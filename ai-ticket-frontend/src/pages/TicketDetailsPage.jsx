@@ -20,15 +20,14 @@ export default function TicketDetailsPage() {
             },
           }
         );
+
         const data = await res.json();
-        console.log(data.ticket);
 
         if (res.ok) {
           setTicket(data.ticket);
         } else {
           alert(data.message || "Failed to fetch ticket");
         }
-        console.log(ticket);
       } catch (err) {
         console.error(err);
         alert("Something went wrong");
@@ -40,56 +39,71 @@ export default function TicketDetailsPage() {
     fetchTicket();
   }, [id]);
 
-  if (loading)
-    return <div className="text-center mt-10">Loading ticket details...</div>;
-  if (!ticket) return <div className="text-center mt-10">Ticket not found</div>;
+  if (loading) {
+    return (
+      <div className="text-center text-white mt-10">
+        Loading ticket details...
+      </div>
+    );
+  }
+
+  if (!ticket) {
+    return <div className="text-center text-white mt-10">Ticket not found</div>;
+  }
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Ticket Details</h2>
+    <div className="max-w-3xl mx-auto px-4 py-6 text-white">
+      <h2 className="text-3xl font-bold mb-6 text-blue-400">
+        🎫 Ticket Details
+      </h2>
 
-      <div className="card bg-gray-800 shadow p-4 space-y-4">
-        <h3 className="text-xl font-semibold">{ticket.title}</h3>
-        <p>{ticket.description}</p>
+      <div className="bg-[#1e293b] border border-gray-700 rounded-lg shadow-lg p-6 space-y-5">
+        <h3 className="text-xl font-semibold text-blue-300">{ticket.title}</h3>
+        <p className="text-gray-300">{ticket.description}</p>
 
-        {/* Conditionally render extended details */}
         {ticket.status && (
           <>
-            <div className="divider">Metadata</div>
-            <p>
-              <strong>Status:</strong> {ticket.status}
-            </p>
-            {ticket.priority && (
-              <p>
-                <strong>Priority:</strong> {ticket.priority}
-              </p>
-            )}
+            <div className="border-t border-gray-600 my-4"></div>
 
-            {ticket.relatedSkills?.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <p>
-                <strong>Related Skills:</strong>{" "}
-                {ticket.relatedSkills.join(", ")}
+                <span className="text-gray-400">📌 Status:</span>{" "}
+                {ticket.status}
               </p>
-            )}
+              {ticket.priority && (
+                <p>
+                  <span className="text-gray-400">⚡ Priority:</span>{" "}
+                  {ticket.priority}
+                </p>
+              )}
+              {ticket.relatedSkills?.length > 0 && (
+                <p>
+                  <span className="text-gray-400">🛠️ Skills:</span>{" "}
+                  {ticket.relatedSkills.join(", ")}
+                </p>
+              )}
+              {ticket.assignedTo && (
+                <p>
+                  <span className="text-gray-400">👤 Assigned To:</span>{" "}
+                  {ticket.assignedTo}
+                </p>
+              )}
+            </div>
 
             {ticket.helpfulNotes && (
               <div>
-                <strong>Helpful Notes:</strong>
-                <div className="prose max-w-none rounded mt-2">
+                <h4 className="text-md font-semibold text-blue-300 mt-4">
+                  📝 Helpful Notes:
+                </h4>
+                <div className="prose max-w-none bg-gray-800 p-3 rounded-lg mt-2 text-gray-100">
                   <ReactMarkdown>{ticket.helpfulNotes}</ReactMarkdown>
                 </div>
               </div>
             )}
 
-            {ticket.assignedTo && (
-              <p>
-                <strong>Assigned To:</strong> {ticket.assignedTo}
-              </p>
-            )}
-
             {ticket.createdAt && (
-              <p className="text-sm text-gray-500 mt-2">
-                Created At: {new Date(ticket.createdAt).toLocaleString()}
+              <p className="text-sm text-gray-500 mt-4">
+                ⏱️ Created At: {new Date(ticket.createdAt).toLocaleString()}
               </p>
             )}
           </>
