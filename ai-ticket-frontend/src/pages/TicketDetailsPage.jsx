@@ -102,9 +102,23 @@ export default function TicketDetailsPage() {
             )}
 
             {ticket.createdAt && (
-              <p className="text-sm text-gray-500 mt-4">
-                ⏱️ Created At: {new Date(ticket.createdAt).toLocaleString()}
-              </p>
+              <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 mt-6 text-sm text-gray-300 space-y-3 shadow-md">
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-400">⏱️</span>
+                  <span className="font-medium text-gray-200">Created At:</span>
+                  <span className="text-gray-400">
+                    {new Date(ticket.createdAt).toLocaleString()}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-400">👤</span>
+                  <span className="font-medium text-gray-200">Created By:</span>
+                  <span className="text-gray-400">
+                    {ticket.createdBy?.email || "N/A"}
+                  </span>
+                </div>
+              </div>
             )}
           </>
         )}

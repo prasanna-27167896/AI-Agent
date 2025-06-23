@@ -13,7 +13,10 @@ export const createTicket = async (req, res) => {
     const newTicket = await Ticket.create({
       title,
       description,
-      createdBy: req.user._id.toString(),
+      createdBy: {
+        id: req.user._id,
+        email: req.user.email,
+      },
     });
 
     await inngest.send({
@@ -53,7 +56,7 @@ export const getTickets = async (req, res) => {
       }).sort({ createdAt: -1 });
     } else {
       // Normal user sees only tickets they created
-      tickets = await Ticket.find({ createdBy: user._id })
+      tickets = await Ticket.find({ "createdBy.id": user._id })
         .select("title description status createdAt")
         .sort({ createdAt: -1 });
     }
@@ -71,15 +74,22 @@ export const getTicket = async (req, res) => {
     let ticket;
 
     if (user.role !== "user") {
-      ticket = await Ticket.findById(req.params.id);
+      ticket = await Ticket.findById(req.params.id).populate(
+        "createdBy",
+        "email"
+      );
     } else {
       ticket = await Ticket.findOne({
-        createdBy: user._id,
-        _id: req.params.id, //both must match
-      }).select(
-        "title description status createdAt helpfulNotes relatedSkills priority assignedTo"
-      );
+        _id: req.params.id,
+        "createdBy.id": user._id,
+      })
+        .select(
+          "title description status createdAt helpfulNotes relatedSkills priority assignedTo createdBy"
+        )
+        .populate("createdBy.id", "email");
     }
+
+    console.log(getTicket);
 
     if (!ticket) {
       return res.status(404).json({ message: "Ticket not found" });
