@@ -24,8 +24,10 @@ export const signup = async (req, res) => {
       {
         _id: user._id,
         role: user.role,
+        email: user.email,
       },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
     );
 
     res.json({ user, token });
@@ -55,8 +57,10 @@ export const login = async (req, res) => {
       {
         _id: user._id,
         role: user.role,
+        email: user.email,
       },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
     );
 
     res.json({ user, token });

@@ -52,27 +52,23 @@ export const onTicketCreated = inngest.createFunction(
       const moderator = await step.run("assign-moderator", async () => {
         let user = await User.findOne({
           role: "moderator",
-          // skills: {
-          //   $eleMatch: {
-          //     $regex: relatedSkills.join("|"),
-          //     $options: "i",
-          //   },
-          // },
           skills: {
             $in: relatedSkills.map((skill) => new RegExp(skill, "i")),
           },
         });
+
         if (!user) {
-          user = await User.findOne({
-            role: "admin",
-          });
+          user = await User.findOne({ role: "admin" });
         }
 
         await Ticket.findByIdAndUpdate(ticket._id, {
-          assignedTo: user?._id || null,
+          assignedTo: user ? user.email : null,
         });
+
         return user;
       });
+
+      // console.log("-------MOD----------", moderator);
 
       await step.run("send-email-notification", async () => {
         if (moderator) {

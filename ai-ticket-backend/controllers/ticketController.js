@@ -40,11 +40,19 @@ export const getTickets = async (req, res) => {
   try {
     const user = req.user;
     let tickets = [];
-    if (user.role !== "user") {
-      tickets = await Ticket.find({})
-        .populate("assignedTo", ["email", "_id"])
-        .sort({ createdAt: -1 });
+
+    if (user.role === "admin") {
+      // Admin sees all tickets
+      tickets = await Ticket.find({}).sort({ createdAt: -1 });
+    } else if (user.role === "moderator") {
+      console.log("Moderator Email:", req.user.email);
+
+      // Moderator sees tickets assigned to them or created by them
+      tickets = await Ticket.find({
+        $or: [{ assignedTo: user.email }, { createdBy: user._id }],
+      }).sort({ createdAt: -1 });
     } else {
+      // Normal user sees only tickets they created
       tickets = await Ticket.find({ createdBy: user._id })
         .select("title description status createdAt")
         .sort({ createdAt: -1 });
@@ -63,16 +71,13 @@ export const getTicket = async (req, res) => {
     let ticket;
 
     if (user.role !== "user") {
-      ticket = await Ticket.findById(req.params.id).populate("assignedTo", [
-        "email",
-        "_id",
-      ]);
+      ticket = await Ticket.findById(req.params.id);
     } else {
       ticket = await Ticket.findOne({
         createdBy: user._id,
-        _id: req.params.id, //both should be true
+        _id: req.params.id, //both must match
       }).select(
-        "title description status createdAt helpfulNotes relatedSkills priority createdBy"
+        "title description status createdAt helpfulNotes relatedSkills priority assignedTo"
       );
     }
 
@@ -82,6 +87,35 @@ export const getTicket = async (req, res) => {
     return res.status(200).json({ ticket });
   } catch (error) {
     console.error("Error fetching ticket", error.message);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const deleteTicket = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const ticket = await Ticket.findByIdAndDelete(id);
+
+    if (!ticket) {
+      return res.status(400).json({ message: "Ticket not found" });
+    }
+
+    // if (
+    //   req.user.role !== "admin" &&
+    //   req.user._id !== ticket.createdBy.toString()
+    // ) {
+    //   return res
+    //     .status(403)
+    //     .json({ message: "Unauthorized to delete this ticket" });
+    // }
+
+    res.status(200).json({
+      message: "Ticket deleted successfully",
+      deletedTicket: ticket,
+    });
+  } catch (error) {
+    console.error("Error deleting ticket", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };

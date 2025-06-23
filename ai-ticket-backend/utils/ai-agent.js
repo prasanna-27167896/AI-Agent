@@ -63,7 +63,7 @@ Ticket information:
     if (!match) throw new Error("No JSON object found");
 
     const jsonString = match ? match[1] : raw.trim();
-    console.log(jsonString);
+    // console.log(jsonString);
 
     return JSON.parse(jsonString);
   } catch (e) {
