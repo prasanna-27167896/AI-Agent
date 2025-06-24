@@ -14,7 +14,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://tickzy-ai-agent.netlify.app/", // Replace with your Netlify URL
+    origin: "https://tickzy-ai-agent.netlify.app", // Replace with your Netlify URL
     credentials: true,
   })
 );
