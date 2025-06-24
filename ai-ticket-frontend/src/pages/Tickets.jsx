@@ -155,9 +155,14 @@ export default function Tickets() {
                 {ticket.title}
               </h3>
               <p className="text-gray-300">{ticket.description}</p>
-              <p className="text-sm text-gray-500">
-                Created At: {new Date(ticket.createdAt).toLocaleString()}
-              </p>
+              <div className="flex flex-wrap text-xs text-gray-400 gap-4 mt-2">
+                <p className="text-sm text-gray-500">
+                  Created By: {ticket.createdBy?.email || "N/A"}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Created At: {new Date(ticket.createdAt).toLocaleString()}
+                </p>
+              </div>
             </Link>
           </div>
         ))}
