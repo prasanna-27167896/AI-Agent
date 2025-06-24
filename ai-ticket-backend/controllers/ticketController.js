@@ -5,11 +5,20 @@ import Ticket from "../models/ticket.js";
 export const createTicket = async (req, res) => {
   try {
     const { title, description } = req.body;
+
+    // Validate input
     if (!title || !description) {
       return res
         .status(400)
         .json({ message: "Title and description are required" });
     }
+
+    // Validate authenticated user
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: "Unauthorized: User not found" });
+    }
+
+    // Create the ticket
     const newTicket = await Ticket.create({
       title,
       description,
@@ -19,27 +28,34 @@ export const createTicket = async (req, res) => {
       },
     });
 
+    // Send ticket created event to Inngest
     await inngest.send({
       name: "ticket/created",
       data: {
-        ticketId: (await newTicket)._id.toString(),
+        ticketId: newTicket._id.toString(), // ✅ removed unnecessary await
         title,
         description,
-        createdBy: req.user._id.toString(),
+        createdBy: {
+          id: req.user._id.toString(),
+          email: req.user.email,
+        },
       },
     });
 
+    // Respond with created ticket
     return res.status(201).json({
       message: "Ticket created and processing started",
       ticket: newTicket,
     });
   } catch (error) {
-    console.error("Error creating ticket", error.message);
+    console.error("❌ Error creating ticket:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const getTickets = async (req, res) => {
+  console.log("👤 Authenticated user in getTickets:", req.user);
+
   try {
     const user = req.user;
     let tickets = [];
@@ -48,11 +64,14 @@ export const getTickets = async (req, res) => {
       // Admin sees all tickets
       tickets = await Ticket.find({}).sort({ createdAt: -1 });
     } else if (user.role === "moderator") {
-      console.log("Moderator Email:", req.user.email);
+      console.log("Moderator Email:", user.email);
 
       // Moderator sees tickets assigned to them or created by them
       tickets = await Ticket.find({
-        $or: [{ assignedTo: user.email }, { createdBy: user._id }],
+        $or: [
+          { assignedTo: user.email },
+          { "createdBy.id": user._id }, // ✅ fixed here
+        ],
       }).sort({ createdAt: -1 });
     } else {
       // Normal user sees only tickets they created
@@ -63,7 +82,7 @@ export const getTickets = async (req, res) => {
 
     return res.status(200).json({ tickets });
   } catch (error) {
-    console.error("Error fetching tickets", error.message);
+    console.error("❌ Error fetching tickets:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
