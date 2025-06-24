@@ -5,26 +5,26 @@ dotenv.config();
 export const sendMail = async (to, subject, text) => {
   try {
     const transporter = nodemailer.createTransport({
-      host: process.env.MAILTRAP_SMTP_HOST,
-      port: process.env.MAILTRAP_SMTP_PORT,
-      secure: false, // true for 465, false for other ports
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT), // Ensure it's a number
+      secure: true, // true for port 465
       auth: {
-        user: process.env.MAILTRAP_SMTP_USER,
-        pass: process.env.MAILTRAP_SMTP_PASS,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
 
     const info = await transporter.sendMail({
-      from: '"Inngest TMS" <no-reply@ai-agent.com>',
+      from: `"Inngest TMS" <${process.env.SMTP_USER}>`,
       to,
       subject,
       text,
     });
 
-    console.log("Message sent:", info.messageId);
+    console.log("✅ Message sent:", info.messageId);
     return info;
   } catch (error) {
-    console.error("❌ Mail error", error.message);
+    console.error("❌ Mail error:", error.message);
     throw error;
   }
 };
