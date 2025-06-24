@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+//This is authentication for the Protected Pages
 function CheckAuth({ children, protectedRoute }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
