@@ -30,7 +30,7 @@ export default function Navbar() {
       {/* Center: Username */}
       {user?.username && (
         <div className="absolute left-1/2 -translate-x-1/2 hidden sm:block">
-          <span className="text-md font-medium text-gray-300">
+          <span className="text-md  font-medium text-gray-300">
             Hi, {user.username}
           </span>
         </div>
@@ -59,14 +59,14 @@ export default function Navbar() {
             {user?.role === "admin" && (
               <Link
                 to="/admin"
-                className="btn btn-sm bg-indigo-600 hover:bg-indigo-500 text-white border-none"
+                className="btn btn-sm bg-blue-900 hover:bg-blue-800 text-white border-none"
               >
                 Admin
               </Link>
             )}
             <button
               onClick={logout}
-              className="btn btn-sm bg-red-600 hover:bg-red-500 text-white border-none"
+              className="btn btn-sm bg-red-500 hover:bg-red-400 text-white border-none"
             >
               Logout
             </button>

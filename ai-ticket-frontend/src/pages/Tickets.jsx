@@ -108,7 +108,7 @@ export default function Tickets() {
           value={form.title}
           onChange={handleChange}
           placeholder="Ticket Title"
-          className="input input-bordered w-full bg-gray-900 text-white border-gray-700"
+          className="input input-bordered w-full bg-gray-700 text-white border-gray-700"
           required
         />
         <textarea
@@ -116,11 +116,11 @@ export default function Tickets() {
           value={form.description}
           onChange={handleChange}
           placeholder="Ticket Description"
-          className="textarea textarea-bordered w-full bg-gray-900 text-white border-gray-700"
+          className="textarea textarea-bordered w-full bg-gray-700 text-white border-gray-700"
           required
         />
         <button
-          className="btn btn-primary bg-blue-600 hover:bg-blue-700 w-full"
+          className="btn btn-primary bg-blue-950 hover:bg-gray-900 w-full border-hidden"
           type="submit"
           disabled={loading}
         >
