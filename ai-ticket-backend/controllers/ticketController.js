@@ -76,7 +76,7 @@ export const getTickets = async (req, res) => {
     } else {
       // Normal user sees only tickets they created
       tickets = await Ticket.find({ "createdBy.id": user._id })
-        .select("title description status createdAt")
+        .select("title description status createdAt createdBy")
         .sort({ createdAt: -1 });
     }
 
