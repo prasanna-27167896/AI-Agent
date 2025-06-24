@@ -16,22 +16,24 @@ export const onTicketCreated = inngest.createFunction(
     try {
       const { ticketId } = event.data;
 
-      //fetch ticket from DB
+      // 1. Fetch ticket
       const ticket = await step.run("fetch-ticket", async () => {
         const ticketObject = await Ticket.findById(ticketId);
-
         if (!ticketObject) {
           throw new NonRetriableError("Ticket not found");
         }
         return ticketObject;
       });
 
+      // 2. Set status to TODO
       await step.run("update-ticket-status", async () => {
         await Ticket.findByIdAndUpdate(ticket._id, { status: "TODO" });
       });
 
+      // 3. Analyze with AI
       const aiResponse = await analyzeTicket(ticket);
 
+      // 4. Save AI-generated fields
       const relatedSkills = await step.run("ai-processing", async () => {
         let skills = [];
 
@@ -46,9 +48,11 @@ export const onTicketCreated = inngest.createFunction(
           });
           skills = aiResponse.relatedSkills;
         }
+
         return skills;
       });
 
+      // 5. Assign moderator
       const moderator = await step.run("assign-moderator", async () => {
         let user = await User.findOne({
           role: "moderator",
@@ -68,24 +72,34 @@ export const onTicketCreated = inngest.createFunction(
         return user;
       });
 
-      // console.log("-------MOD----------", moderator);
-
+      // 6. Send email notification
       await step.run("send-email-notification", async () => {
-        if (moderator) {
-          const finalTicket = await Ticket.findById(ticket._id);
-          await sendMail(
-            moderator.email,
-            "Ticket Assigned",
-            `A new ticket is assigned to you 
-            \n
-            Title of the Ticket: ${finalTicket.title}`
-          );
+        try {
+          if (moderator?.email) {
+            const finalTicket = await Ticket.findById(ticket._id);
+
+            if (!finalTicket) {
+              throw new NonRetriableError("Final ticket not found");
+            }
+
+            await sendMail(
+              moderator.email,
+              "Ticket Assigned",
+              `A new ticket is assigned to you.\n\nTitle: ${finalTicket.title}`
+            );
+          }
+        } catch (err) {
+          console.error("❌ Failed to send email:", err.message);
+          throw new NonRetriableError("Email error: " + err.message);
         }
       });
 
       return { success: true };
     } catch (error) {
-      console.error("❌ Errow running the step", error.message);
+      console.error(
+        "❌ Error running the on-ticket-created function:",
+        error.message
+      );
       return { success: false };
     }
   }

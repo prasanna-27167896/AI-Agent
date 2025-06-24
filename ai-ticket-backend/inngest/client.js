@@ -4,5 +4,5 @@ dotenv.config();
 
 export const inngest = new Inngest({
   id: "ticketing-system",
-  eventKey: process.env.INNGEST_EVENT_KEY, // Use your env var here
+  eventKey: process.env.INNGEST_SIGNING_KEY, // Use your env var here
 });
