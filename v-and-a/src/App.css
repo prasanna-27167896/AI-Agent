@@ -1,0 +1,56 @@
+/* App.css */
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0.5em 0;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* HomePage specific styles */
+.home-page {
+  padding: 2rem;
+}
+
+.home-page h1 {
+  font-size: 2.5rem;
+}
+
+/* VideoPage specific styles */
+.video-page {
+  padding: 2rem;
+}
+
+.video-page h1 {
+  font-size: 2rem;
+}
+
+/* Center content in both pages */
+.page-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

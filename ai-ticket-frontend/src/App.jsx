@@ -7,8 +7,11 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import Admin from "./pages/Admin.jsx";
 import Navbar from "./components/Navbar.jsx";
+import HomePage from "./video/HomePage.jsx";
+import VideoPage from "./video/VideoPage.jsx";
 
 export default function App() {
+  console.log(import.meta.env.VITE_SERVER_URL);
   return (
     <>
       <Navbar />
@@ -26,6 +29,22 @@ export default function App() {
           element={
             <CheckAuth protectedRoute={true}>
               <TicketDetailsPage />
+            </CheckAuth>
+          }
+        />
+        <Route
+          path="/room/"
+          element={
+            <CheckAuth protectedRoute={true}>
+              <HomePage />
+            </CheckAuth>
+          }
+        />
+        <Route
+          path="/room/:id"
+          element={
+            <CheckAuth protectedRoute={true}>
+              <VideoPage />
             </CheckAuth>
           }
         />

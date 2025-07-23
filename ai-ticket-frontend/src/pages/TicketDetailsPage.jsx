@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
 export default function TicketDetailsPage() {
@@ -58,7 +58,20 @@ export default function TicketDetailsPage() {
       </h2>
 
       <div className="bg-[#1e293b] border border-gray-700 rounded-lg shadow-lg p-6 space-y-5">
-        <h3 className="text-xl font-semibold text-blue-300">{ticket.title}</h3>
+        {/* Title and Connect Button Row */}
+        <div className="flex items-center justify-between">
+          <h3 className="text-xl font-semibold text-blue-300">{ticket.title}</h3>
+
+          <Link
+            to={`/room/`}
+            state={{ email: ticket.createdBy.email, ticketId: ticket._id }}
+          >
+            <div className="inline-block px-4 py-1 text-sm text-cyan-200 border border-cyan-500 rounded-lg shadow-md bg-cyan-800 hover:bg-cyan-700 hover:text-white transition-all duration-300 cursor-pointer">
+              Connect
+            </div>
+          </Link>
+        </div>
+
         <p className="text-gray-300">{ticket.description}</p>
 
         {ticket.status && (

@@ -88,7 +88,7 @@ export default function Tickets() {
           },
         }
       );
-      const data = await res.json();
+      // const data = await res.json();
       return res.ok;
     } catch (error) {
       console.error("Delete error:", error);
@@ -138,8 +138,16 @@ export default function Tickets() {
             key={ticket._id}
             className="relative bg-gray-800 border border-gray-700 rounded-xl p-4 hover:shadow-xl"
           >
+            <Link
+              to={`/room/`}
+              state={{ email: ticket.createdBy.email, ticketId: ticket._id }}
+            >
+              <div className="absolute top-2 right-10 px-4 py-1 text-sm text-cyan-200 border border-cyan-500 rounded-lg shadow-md bg-cyan-800 hover:bg-cyan-700 hover:text-white transition-all duration-300 cursor-pointer">
+                Connect
+              </div>
+            </Link>
             <Trash2
-              className="absolute top-2 right-2 text-gray-400 hover:text-red-600 cursor-pointer"
+              className="absolute top-2 right-2 text-gray-400 hover:text-red-600 cursor-pointer mt-0.5"
               title="Delete Ticket"
               onClick={(e) => {
                 e.preventDefault();
